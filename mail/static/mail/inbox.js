@@ -112,6 +112,12 @@ function view_email(id) {
       // Reply button onclick function
       document.querySelector('#reply').addEventListener('click', function() {
           console.log('This element has been clicked!');
+          compose_email();
+          
+          // Populate form with reply information
+          //document.getElementById('reply_toggle').innerHTML = `Reply to ${email['sender']}`;
+          document.querySelector('#compose-recipients').value = email['sender'];
+          //document.getElementById("compose-recipients").disabled = true;
       });
 
     });
