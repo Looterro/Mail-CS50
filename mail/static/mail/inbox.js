@@ -117,11 +117,20 @@ function view_email(id) {
       document.querySelector('#reply').addEventListener('click', function() {
         console.log('This element has been clicked!');
         compose_email();
-        
+        console.log(email['subject'])
         // Populate form with reply information
         document.querySelector('#form-title').innerHTML = `Reply to ${email['sender']}`;
         document.querySelector('#compose-recipients').value = email['sender'];
         document.getElementById("compose-recipients").disabled = true;
+
+        // Check if subject is "RE:"
+        if (email['subject'].slice(0,3) != "Re:"){
+          document.querySelector('#compose-subject').value = `Re: ${email['subject']}`;
+        } else {
+          document.querySelector('#compose-subject').value = email['subject']
+        }
+
+        document.querySelector('#compose-body').value = `On ${email['timestamp']} ${email['sender']} wrote: ${email['body']}`;
     });
 
   });
