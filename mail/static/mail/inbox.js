@@ -45,6 +45,10 @@ function compose_email() {
   document.querySelector('#compose-recipients').value = '';
   document.querySelector('#compose-subject').value = '';
   document.querySelector('#compose-body').value = '';
+
+  // Clear out reply form changes
+  document.querySelector('#form-title').innerHTML = "New Email";
+  document.getElementById("compose-recipients").disabled = false;
 }
 
 function load_mailbox(mailbox) {
@@ -111,9 +115,15 @@ function view_email(id) {
     
       // Reply button onclick function
       document.querySelector('#reply').addEventListener('click', function() {
-          console.log('This element has been clicked!');
-      });
-
+        console.log('This element has been clicked!');
+        compose_email();
+        
+        // Populate form with reply information
+        document.querySelector('#form-title').innerHTML = `Reply to ${email['sender']}`;
+        document.querySelector('#compose-recipients').value = email['sender'];
+        document.getElementById("compose-recipients").disabled = true;
     });
+
+  });
 
 }
