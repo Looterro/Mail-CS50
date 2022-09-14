@@ -1,3 +1,30 @@
 textarea {
     min-height: 400px;
 }
+
+#emails-view div {
+    border: solid 1px;
+    padding: 3px;
+    margin: 2px;
+    border-radius: 2px;
+}
+
+#sender, #subject {
+    padding: 10px;
+}
+
+#timestamp {
+    text-align: right;
+    float: right;
+    padding: 0px;
+    color: gray;
+}
+
+.list-group-item {
+    border: none;
+    padding: 1px;
+}
+
+#email-view button {
+    margin-top: 4px;
+}
