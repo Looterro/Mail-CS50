@@ -6,7 +6,7 @@ Full specification, API description and setup: https://cs50.harvard.edu/web/2020
 
 ## Setup
 
-First, clone this repository:
+Clone this repository and change directory to mail:
 
 ```bash
 git clone https://github.com/Looterro/Mail-CS50.git
@@ -18,7 +18,7 @@ Install Django:
 python3 -m pip install Django
 ```
 
-To run the development server:
+Run the development server using command:
 ```bash
 python manage.py runserver
 ```
