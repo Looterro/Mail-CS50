@@ -72,6 +72,8 @@ function load_mailbox(mailbox) {
     // Display emails
     emails.forEach(email => {
       const element = document.createElement('div');
+      // Checking if email was read or not and assigning appropriate color
+      element.style = email['read'] ? "background-color: #c3c3c3ea;" : "background-color: white;";
       element.innerHTML = `<span id="sender"><b>${email['sender']}</b></span> <span id="subject">${email['subject']}</span> <span id="timestamp">${email['timestamp']}</span>`;
       element.addEventListener('click', function() {
           console.log('This element has been clicked!');
@@ -108,7 +110,7 @@ function view_email(id) {
       </ul>
       <button class="btn btn-sm btn-outline-primary" id="reply">Reply</button>
       <button class="btn btn-sm btn-outline-primary" id="add_to_archive"></button>
-      <button class="btn btn-sm btn-outline-primary" id="unread">Mark as Unread</button>
+      <button class="btn btn-sm btn-outline-primary" id="read_toggle">Mark as Unread</button>
       <hr>
       <p>${email['body']}</p>
       `;
@@ -139,13 +141,13 @@ function view_email(id) {
     document.querySelector('#add_to_archive').addEventListener('click', function() {
       console.log('This element has been clicked!');
 
+      // Change archive status after click
       if (email['archived']) {
         email['archived'] = false;
       } else {
         email['archived'] = true;
       }
       console.log(email['archived']);
-      console.log(email['sender']);
 
       // Put email in the archive box and load inbox mailbox
       fetch('/emails/' + email['id'], {
@@ -172,7 +174,28 @@ function view_email(id) {
       document.getElementById('add_to_archive').style.display = "none";
     }
 
-    // Read button toggle function
+    // Mark email as read after opening it
+
+    fetch('/emails/' + email['id'], {
+      method: 'PUT',
+      body: JSON.stringify({
+          read: true
+      })
+    })
+
+    // Unread toggle button function
+    document.querySelector('#read_toggle').addEventListener('click', function() {
+      
+      fetch('/emails/' + email['id'], {
+        method: 'PUT',
+        body: JSON.stringify({
+            read: false
+        })
+
+      })
+      .then(response => load_mailbox('inbox'))
+    });
+
   });
 
 }
