@@ -107,32 +107,72 @@ function view_email(id) {
         <li class="list-group-item"><b>Timestamp: </b>${email['timestamp']}</li>
       </ul>
       <button class="btn btn-sm btn-outline-primary" id="reply">Reply</button>
-      <button class="btn btn-sm btn-outline-primary" id="add_to_archive">Archive</button>
+      <button class="btn btn-sm btn-outline-primary" id="add_to_archive"></button>
       <button class="btn btn-sm btn-outline-primary" id="unread">Mark as Unread</button>
       <hr>
       <p>${email['body']}</p>
       `;
     
-      // Reply button onclick function
-      document.querySelector('#reply').addEventListener('click', function() {
-        console.log('This element has been clicked!');
-        compose_email();
-        console.log(email['subject'])
-        // Populate form with reply information
-        document.querySelector('#form-title').innerHTML = `Reply to ${email['sender']}`;
-        document.querySelector('#compose-recipients').value = email['sender'];
-        document.getElementById("compose-recipients").disabled = true;
+    // Reply button onclick function
+    document.querySelector('#reply').addEventListener('click', function() {
+      console.log('This element has been clicked!');
+      compose_email();
+      console.log(email['subject'])
+      // Populate form with reply information
+      document.querySelector('#form-title').innerHTML = `Reply to ${email['sender']}`;
+      document.querySelector('#compose-recipients').value = email['sender'];
+      document.getElementById("compose-recipients").disabled = true;
 
-        // Check if subject is "RE:"
-        if (email['subject'].slice(0,3) != "Re:"){
-          document.querySelector('#compose-subject').value = `Re: ${email['subject']}`;
-        } else {
-          document.querySelector('#compose-subject').value = email['subject']
-        }
+      // Check if subject is "RE:"
+      if (email['subject'].slice(0,3) != "Re:"){
+        document.querySelector('#compose-subject').value = `Re: ${email['subject']}`;
+      } else {
+        document.querySelector('#compose-subject').value = email['subject']
+      };
 
-        document.querySelector('#compose-body').value = `On ${email['timestamp']} ${email['sender']} wrote: ${email['body']}`;
+      // Populate body with former message and make space for the new one:
+      document.querySelector('#compose-body').value = `\r\n \r\n | On ${email['timestamp']} ${email['sender']} wrote: ${email['body']}`;
+
     });
 
+    // Archive button onclick function
+    document.querySelector('#add_to_archive').addEventListener('click', function() {
+      console.log('This element has been clicked!');
+
+      if (email['archived']) {
+        email['archived'] = false;
+      } else {
+        email['archived'] = true;
+      }
+      console.log(email['archived']);
+      console.log(email['sender']);
+
+      // Put email in the archive box and load inbox mailbox
+      fetch('/emails/' + email['id'], {
+        method: 'PUT',
+        body: JSON.stringify({
+            archived: email['archived']
+        })
+      })
+      .then(response => load_mailbox('inbox'))
+    });
+
+    // Toggle add_to_archive button name
+
+    if (!email['archived']) {
+      document.querySelector('#add_to_archive').innerHTML = `Archive`;
+      } else {
+      document.querySelector('#add_to_archive').innerHTML = `Unarchive`;
+      }
+    
+    // Hide archive button in Sent mailbox, unless its a mail sent to oneself
+
+    const user_email = document.getElementById('email-user').value;
+    if (user_email == email['sender'] && user_email != email['recipients']) {
+      document.getElementById('add_to_archive').style.display = "none";
+    }
+
+    // Read button toggle function
   });
 
 }
